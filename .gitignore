@@ -46,7 +46,6 @@ Module.symvers
 *.swp
 *.swo
 *~
-.vscode/
 .idea/
 
 # OS generated files
