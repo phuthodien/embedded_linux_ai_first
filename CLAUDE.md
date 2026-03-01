@@ -62,6 +62,19 @@ gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -o <output> <source>.c
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./<program>
 ```
 
+## Tài liệu tham khảo
+
+Khi người dùng hỏi về lý thuyết hệ điều hành ở tầng user-space (system calls, file I/O, processes, threads, signals, IPC, sockets, memory management, scheduling, ...), **ưu tiên tra cứu** trong:
+
+```
+docs/linux_programming_interface_book/chapters/
+```
+
+Đây là sách *The Linux Programming Interface* (Michael Kerrisk) đã split thành 64 chapter.
+- File index: `docs/linux_programming_interface_book/chapters/INDEX.md`
+- Đọc INDEX.md để xác định chapter phù hợp, sau đó đọc chapter đó để trả lời.
+- Chỉ dùng kiến thức bên ngoài khi sách không cover chủ đề được hỏi.
+
 ## Ngôn ngữ
 
 - Commit message: ưu tiên **tiếng Việt**
