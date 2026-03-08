@@ -7,13 +7,16 @@ Giảng viên: Lưu An Phú | FPT Software - Corporate Training Center.
 
 ```
 .
-├── conversations/         # Log các cuộc hội thoại với Claude Code
-├── docs/<NN>_<topic>/     # Học liệu từng bài (markdown, tạo bằng AI)
-├── examples/<NN>_<topic>/ # Example code & bài thực hành
+├── conversations/                  # Log các cuộc hội thoại với Claude Code
+├── docs/
+│   ├── lessons/<NN>_<topic>/       # Học liệu từng bài (markdown, tạo bằng AI)
+│   └── linux_programming_interface_book/  # Sách TLPI tham khảo
+├── examples/
+│   └── lessons/<NN>_<topic>/       # Example code & bài thực hành
 └── CLAUDE.md
 ```
 
-Mỗi bài học gồm: file markdown học liệu trong docs/ + example code trong examples/.
+Mỗi bài học gồm: file markdown học liệu trong `docs/lessons/` + example code trong `examples/lessons/`.
 
 ## Conversation logs
 
