@@ -27,7 +27,7 @@
 			"command": "bash",
 			"args": [
 				"-c",
-				"/home/phula/work/bbb/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-gcc -g -O0 -Wall -Wextra -std=c99 -o ${fileDirname}/${fileBasenameNoExtension} ${file} && scp ${fileDirname}/${fileBasenameNoExtension} ${file} debian@192.168.137.2:/home/debian/"
+				"/home/phula/work/bbb/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-gcc -g -O0 -Wall -Wextra -std=c99 -o ${fileDirname}/${fileBasenameNoExtension} ${file}"
 			],
 			"problemMatcher": ["$gcc"]
 		}
