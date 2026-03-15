@@ -20,6 +20,32 @@
 				}
 			],
 			"preLaunchTask": "gcc build active file"
+		},
+		{
+			"name": "Remote Debug BBB",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${fileDirname}/${fileBasenameNoExtension}",
+			"args": [],
+			"stopAtEntry": true,
+			"cwd": "${fileDirname}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"miDebuggerPath": "/usr/bin/gdb-multiarch",
+			"miDebuggerServerAddress": "192.168.137.2:2345",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				},
+				{
+					"description": "Set sysroot",
+					"text": "-gdb-set sysroot /",
+					"ignoreFailures": false
+				}
+			],
 		}
 	]
 }
