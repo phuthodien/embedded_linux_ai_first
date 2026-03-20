@@ -55,3 +55,10 @@ Thumbs.db
 # Build directories
 build/
 out/
+
+# ELF binaries: ignore all files without extension in examples/
+# (compiled executables typically have no extension)
+examples/lessons/**/*
+!examples/lessons/**/*.*
+!examples/lessons/**/Makefile
+!examples/lessons/**/README
