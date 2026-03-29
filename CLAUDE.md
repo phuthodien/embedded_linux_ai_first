@@ -10,7 +10,9 @@ Giảng viên: Lưu An Phú | FPT Software - Corporate Training Center.
 ├── conversations/                  # Log các cuộc hội thoại với Claude Code
 ├── docs/
 │   ├── lessons/<NN>_<topic>/       # Học liệu từng bài (markdown, tạo bằng AI)
-│   └── linux_programming_interface_book/  # Sách TLPI tham khảo
+│   ├── linux_programming_interface_book/  # Sách TLPI tham khảo
+│   └── beaglebone_black_docs/
+│       └── hw-docs/                # Tài liệu phần cứng BBB (xem index.md bên trong)
 ├── examples/
 │   └── lessons/<NN>_<topic>/       # Example code & bài thực hành
 └── CLAUDE.md
@@ -66,6 +68,18 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./<program>
 ```
 
 ## Tài liệu tham khảo
+
+### Hardware docs (BeagleBone Black)
+
+Khi cần tra cứu về **phần cứng BBB** (register, pin mux, GPIO, timer, clock, boot process, schematic, device tree), đọc:
+
+```
+docs/beaglebone_black_docs/hw-docs/index.md
+```
+
+File index mô tả mục đích từng tài liệu và workflow tra cứu. Đọc index trước, sau đó đọc file cụ thể.
+
+### Linux Programming Interface
 
 Khi người dùng hỏi về lý thuyết hệ điều hành ở tầng user-space (system calls, file I/O, processes, threads, signals, IPC, sockets, memory management, scheduling, ...), **ưu tiên tra cứu** trong:
 
