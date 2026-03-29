@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "Kernel (BBB ARM)",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/phula/work/bbb/kernelbuildscripts/KERNEL/include",
+                "/home/phula/work/bbb/kernelbuildscripts/KERNEL/include/uapi",
+                "/home/phula/work/bbb/kernelbuildscripts/KERNEL/arch/arm/include",
+                "/home/phula/work/bbb/kernelbuildscripts/KERNEL/arch/arm/include/generated",
+                "/home/phula/work/bbb/kernelbuildscripts/KERNEL/arch/arm/include/uapi"
+            ],
+            "defines": [
+                "__KERNEL__",
+                "MODULE",
+                "__arm__"
+            ],
+            "compilerPath": "/home/phula/work/bbb/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-gcc",
+            "cStandard": "gnu11",
+            "intelliSenseMode": "linux-gcc-arm"
+        }
+    ],
+    "version": 4
+}
