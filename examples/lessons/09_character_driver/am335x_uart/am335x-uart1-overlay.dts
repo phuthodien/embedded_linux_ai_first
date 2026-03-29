@@ -1,0 +1,43 @@
+/*
+ * am335x-uart1-overlay.dts - Device tree overlay for UART1 on BBB
+ *
+ * Enables UART1 with custom compatible string so our training driver
+ * binds instead of the stock omap-serial driver.
+ *
+ * Pin mux:
+ *   P9_26 (D16) -> UART1_RXD (offset 0x180, MODE0, input, pull-up)
+ *   P9_24 (D15) -> UART1_TXD (offset 0x184, MODE0, output)
+ *
+ * Usage on BBB:
+ *   sudo mkdir -p /sys/kernel/config/device-tree/overlays/uart1
+ *   sudo sh -c 'cat am335x-uart1-overlay.dtbo > \
+ *       /sys/kernel/config/device-tree/overlays/uart1/dtbo'
+ */
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "ti,am335x-bone-black", "ti,am335x-bone";
+
+	fragment@0 {
+		target = <&am33xx_pinmux>;
+		__overlay__ {
+			uart1_pins: uart1_pins {
+				pinctrl-single,pins = <
+					0x180 0x20	/* P9_26 uart1_rxd: MODE0 | INPUT */
+					0x184 0x00	/* P9_24 uart1_txd: MODE0 | OUTPUT */
+				>;
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&uart1>;
+		__overlay__ {
+			compatible = "training,am335x-uart";
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart1_pins>;
+		};
+	};
+};
