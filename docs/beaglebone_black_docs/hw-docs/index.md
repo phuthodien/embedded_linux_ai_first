@@ -3,23 +3,14 @@
 > File này giúp AI hiểu cấu trúc và mục đích của từng tài liệu trong thư mục `hw-docs/`.
 > Đọc file này TRƯỚC KHI đọc bất kỳ file nào khác trong thư mục.
 
-## 1. AM335x Technical Reference Manual (trích)
+## 1. AM335x Technical Reference Manual
 
-Các file dưới đây được trích xuất từ **TI AM335x Technical Reference Manual (SPRUH73Q)**.
-Mỗi file tương ứng với một chapter, mô tả chi tiết về một peripheral/subsystem của SoC AM335x.
+Thư mục [`am33xx_reference_manual/`](am33xx_reference_manual/) chứa **toàn bộ** AM335x TRM (SPRUH73Q) đã được chia thành 27 chapter files.
 
-| File | Chapter | Nội dung |
-|------|---------|----------|
-| `am335x_ch2_memory_map.md` | Ch.2 | Memory map của ARM Cortex-A8: địa chỉ L4_WKUP, L4_PER, L4_FAST |
-| `am335x_ch6_interrupt_controller.md` | Ch.6 | Interrupt Controller (INTC): cấu trúc, programming model, bảng interrupt number |
-| `am335x_ch8_prcm.md` | Ch.8 | Power, Reset and Clock Management: clock domains, module enable/disable |
-| `am335x_ch9_pin_mux_control.md` | Ch.9 | Control Module — Pin Mux: thanh ghi conf_\<pin\>, mode 0-7, pull-up/down |
-| `am335x_ch20_dmtimer.md` | Ch.20 | DM Timer: hardware timer, prescaler, compare, capture, interrupt |
-| `am335x_ch25_gpio.md` | Ch.25 | GPIO: 4 instances × 32 pins, input/output, interrupt, debounce |
-| `am335x_ch26_rom_code.md` | Ch.26 | ROM Code: boot process, SYSBOOT pins, boot sources (NAND/MMC/SPI/UART/USB/EMAC), image format, FAT filesystem, wakeup |
+→ Đọc **[am33xx_reference_manual/index.md](am33xx_reference_manual/index.md)** để xem danh sách chapters và hướng dẫn tra cứu.
 
 **Thứ tự đọc khuyến nghị** khi cần hiểu một peripheral:
-`ch2 (memory map)` → `ch8 (clock)` → `ch9 (pin mux)` → chapter của peripheral cần dùng (ch20, ch25, ch6...)
+`ch02 (memory map)` → `ch08 (clock)` → `ch09 (pin mux)` → chapter của peripheral cần dùng
 
 ## 2. Device Tree source files (Linux kernel)
 
