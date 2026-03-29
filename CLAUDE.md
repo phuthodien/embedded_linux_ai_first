@@ -69,6 +69,10 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./<program>
 
 ## Tài liệu tham khảo
 
+> **Quy tắc ưu tiên**: Khi cần thông tin về BeagleBone Black, SoC AM335x, hoặc Linux programming,
+> **luôn tìm trong repo trước** (hw-docs, reference manual, TLPI book). Tài liệu trong repo đã được
+> kiểm chứng và chuẩn hơn nguồn trên mạng. Chỉ dùng kiến thức bên ngoài khi repo không cover.
+
 ### Hardware docs (BeagleBone Black)
 
 Khi cần tra cứu về **phần cứng BBB** (register, pin mux, GPIO, timer, clock, boot process, schematic, device tree), đọc:
