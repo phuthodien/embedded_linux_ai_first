@@ -1,12 +1,19 @@
 /*
- * echo_misc.c - Misc character driver to control LED on GPIO0_31
+ * echo_misc.c - Misc character driver to control LED via device tree
  *
  * Write "1"/"on" to /dev/echo_misc to turn LED on, "0"/"off" to turn off.
  * Read from /dev/echo_misc to get current state.
- * GPIO control is done by direct register access (no gpiolib).
  *
- * Hardware: BeagleBone Black, AM335x SoC
- * Pin: GPIO0_31 = P9_13 (gpmc_wpn, mux mode 7)
+ * GPIO base address and pin number are read from device tree node
+ * with compatible = "training,gpio-led".
+ *
+ * Device tree node example:
+ *   training_led {
+ *       compatible = "training,gpio-led";
+ *       reg = <0x44e07000 0x1000>;   // GPIO0 register block
+ *       gpio-bit = <31>;             // GPIO0_31 = P9_13
+ *       label = "training:p9_13";
+ *   };
  */
 
 #include <linux/init.h>
@@ -14,34 +21,33 @@
 #include <linux/miscdevice.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
+#include <linux/platform_device.h>
+#include <linux/of.h>
 #include <linux/io.h>
 
 #define DEVICE_NAME	"echo_misc"
 
-/* AM335x GPIO0 registers (TRM SPRUH73Q, ch25) */
-#define GPIO0_BASE		0x44E07000
-#define GPIO0_SIZE		0x1000
-
-#define GPIO_OE			0x134	/* Output Enable: 0=output, 1=input */
+/* AM335x GPIO register offsets (TRM SPRUH73Q, ch25) */
+#define GPIO_OE			0x134
 #define GPIO_DATAOUT		0x13C
 #define GPIO_SETDATAOUT		0x194
 #define GPIO_CLEARDATAOUT	0x190
 
-#define GPIO0_31_BIT		BIT(31)
-
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Training");
-MODULE_DESCRIPTION("Misc char driver: LED control on GPIO0_31 via direct register access");
+MODULE_DESCRIPTION("Misc char driver: LED control via device tree");
 
-static void __iomem *gpio0_base;
+static void __iomem *gpio_base;
+static u32 gpio_bit_mask;
 static int led_state;
+static const char *led_label;
 
 static void led_set(int on)
 {
 	if (on)
-		writel(GPIO0_31_BIT, gpio0_base + GPIO_SETDATAOUT);
+		writel(gpio_bit_mask, gpio_base + GPIO_SETDATAOUT);
 	else
-		writel(GPIO0_31_BIT, gpio0_base + GPIO_CLEARDATAOUT);
+		writel(gpio_bit_mask, gpio_base + GPIO_CLEARDATAOUT);
 	led_state = on;
 }
 
@@ -91,7 +97,6 @@ static ssize_t echo_write(struct file *filep, const char __user *buf,
 		return -EFAULT;
 	kbuf[to_copy] = '\0';
 
-	/* Strip trailing newline */
 	if (to_copy > 0 && kbuf[to_copy - 1] == '\n')
 		kbuf[to_copy - 1] = '\0';
 
@@ -119,73 +124,105 @@ static struct miscdevice echo_misc = {
 	.fops  = &echo_fops,
 };
 
-static int gpio_hw_init(void)
+static int echo_led_probe(struct platform_device *pdev)
 {
+	struct device *dev = &pdev->dev;
+	struct resource *res;
+	u32 gpio_bit;
 	u32 val;
+	int ret;
 
 	/*
-	 * Pin mux for GPIO0_31 (P9_13) is already configured as mode 7
-	 * (GPIO) by device tree. We only need to map GPIO0 registers
-	 * and set direction to output.
+	 * Read "reg" property via standard platform API.
+	 * Kernel auto-parses reg = <0x44e07000 0x1000> into IORESOURCE_MEM.
 	 */
-	gpio0_base = ioremap(GPIO0_BASE, GPIO0_SIZE);
-	if (!gpio0_base) {
-		pr_err(DEVICE_NAME ": failed to ioremap GPIO0\n");
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	if (!res) {
+		dev_err(dev, "no 'reg' property in device tree\n");
+		return -ENODEV;
+	}
+	dev_info(dev, "[dt] reg: phys=0x%08llx size=0x%08llx\n",
+		 (unsigned long long)res->start,
+		 (unsigned long long)resource_size(res));
+
+	/*
+	 * Use devm_ioremap() instead of devm_ioremap_resource() because
+	 * the GPIO0 region is already claimed by the gpio-omap driver.
+	 * devm_ioremap_resource() would fail with -EBUSY.
+	 */
+	gpio_base = devm_ioremap(dev, res->start, resource_size(res));
+	if (!gpio_base) {
+		dev_err(dev, "failed to ioremap 0x%08llx\n",
+			(unsigned long long)res->start);
 		return -ENOMEM;
 	}
 
-	/* Configure GPIO0_31 as output: clear bit 31 in OE register */
-	val = readl(gpio0_base + GPIO_OE);
-	val &= ~GPIO0_31_BIT;
-	writel(val, gpio0_base + GPIO_OE);
-
-	/* Start with LED off */
-	led_set(0);
-
-	return 0;
-}
-
-static void gpio_hw_cleanup(void)
-{
-	u32 val;
-
-	/* Turn off LED */
-	led_set(0);
-
-	/* Restore GPIO0_31 as input */
-	val = readl(gpio0_base + GPIO_OE);
-	val |= GPIO0_31_BIT;
-	writel(val, gpio0_base + GPIO_OE);
-
-	iounmap(gpio0_base);
-}
-
-static int __init echo_init(void)
-{
-	int ret;
-
-	ret = gpio_hw_init();
-	if (ret)
+	/*
+	 * Read "gpio-bit" custom property via of_property_read_u32().
+	 */
+	ret = of_property_read_u32(dev->of_node, "gpio-bit", &gpio_bit);
+	if (ret) {
+		dev_err(dev, "no 'gpio-bit' property in device tree\n");
 		return ret;
+	}
+	gpio_bit_mask = BIT(gpio_bit);
+	dev_info(dev, "[dt] gpio-bit: %u (mask=0x%08x)\n",
+		 gpio_bit, gpio_bit_mask);
+
+	/*
+	 * Read "label" custom string property via of_property_read_string().
+	 */
+	ret = of_property_read_string(dev->of_node, "label", &led_label);
+	if (ret)
+		led_label = "unknown";
+	dev_info(dev, "[dt] label: %s\n", led_label);
+
+	/* Configure GPIO pin as output */
+	val = readl(gpio_base + GPIO_OE);
+	val &= ~gpio_bit_mask;
+	writel(val, gpio_base + GPIO_OE);
+
+	led_set(0);
 
 	ret = misc_register(&echo_misc);
 	if (ret) {
-		pr_err(DEVICE_NAME ": misc_register failed: %d\n", ret);
-		gpio_hw_cleanup();
+		dev_err(dev, "misc_register failed: %d\n", ret);
 		return ret;
 	}
 
-	pr_info(DEVICE_NAME ": registered at /dev/%s (GPIO0_31 = P9_13)\n",
-		echo_misc.name);
+	dev_info(dev, "registered /dev/%s (label=%s)\n",
+		 echo_misc.name, led_label);
 	return 0;
 }
 
-static void __exit echo_exit(void)
+static int echo_led_remove(struct platform_device *pdev)
 {
+	u32 val;
+
+	led_set(0);
+
+	/* Restore GPIO pin as input */
+	val = readl(gpio_base + GPIO_OE);
+	val |= gpio_bit_mask;
+	writel(val, gpio_base + GPIO_OE);
+
 	misc_deregister(&echo_misc);
-	gpio_hw_cleanup();
-	pr_info(DEVICE_NAME ": unregistered\n");
+	dev_info(&pdev->dev, "removed\n");
+	return 0;
 }
 
-module_init(echo_init);
-module_exit(echo_exit);
+static const struct of_device_id echo_led_of_match[] = {
+	{ .compatible = "training,gpio-led" },
+	{ /* sentinel */ }
+};
+MODULE_DEVICE_TABLE(of, echo_led_of_match);
+
+static struct platform_driver echo_led_driver = {
+	.probe	= echo_led_probe,
+	.remove	= echo_led_remove,
+	.driver	= {
+		.name		= "echo_led",
+		.of_match_table	= echo_led_of_match,
+	},
+};
+module_platform_driver(echo_led_driver);

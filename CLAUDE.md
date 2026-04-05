@@ -67,6 +67,11 @@ gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -o <output> <source>.c
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./<program>
 ```
 
+## BBB Kernel Source
+
+- Source code: `/home/phula/work/bbb/kernelbuildscripts`
+- Build script: `/home/phula/work/bbb/kernelbuildscripts/tools/rebuild.sh`
+
 ## Tài liệu tham khảo
 
 > **Quy tắc ưu tiên**: Khi cần thông tin về BeagleBone Black, SoC AM335x, hoặc Linux programming,
