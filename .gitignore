@@ -24,14 +24,18 @@
 *.exe
 *.out
 *.app
+examples/lessons/09_character_driver/test_echo
 
 # Kernel build artifacts
 *.mod
 *.mod.c
+*.mod.o
 *.cmd
 *.order
 modules.builtin
 Module.symvers
+*.dtbo
+.tmp_versions/
 
 # Debug files
 *.dSYM/
