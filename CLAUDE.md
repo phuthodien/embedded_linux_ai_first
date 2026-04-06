@@ -11,6 +11,8 @@ Giảng viên: Lưu An Phú | FPT Software - Corporate Training Center.
 ├── docs/
 │   ├── lessons/<NN>_<topic>/       # Học liệu từng bài (markdown, tạo bằng AI)
 │   ├── linux_programming_interface_book/  # Sách TLPI tham khảo
+│   ├── linux_device_drivers_3rd_book/     # Sách LDD3 (Corbet, Rubini, Kroah-Hartman)
+│   ├── essential_linux_device_drivers_book/ # Sách ELDD (Venkateswaran)
 │   └── beaglebone_black_docs/
 │       └── hw-docs/                # Tài liệu phần cứng BBB (xem index.md bên trong)
 ├── examples/
@@ -98,6 +100,32 @@ docs/linux_programming_interface_book/chapters/
 
 Đây là sách *The Linux Programming Interface* (Michael Kerrisk) đã split thành 64 chapter.
 - File index: `docs/linux_programming_interface_book/chapters/INDEX.md`
+- Đọc INDEX.md để xác định chapter phù hợp, sau đó đọc chapter đó để trả lời.
+- Chỉ dùng kiến thức bên ngoài khi sách không cover chủ đề được hỏi.
+
+### Linux Device Drivers, 3rd Edition (LDD3)
+
+Khi người dùng hỏi về **Linux kernel module, device driver cơ bản** (char driver, block driver, network driver, PCI, USB, memory mapping, DMA, concurrency, interrupt handling, device model, debugging), **ưu tiên tra cứu** trong:
+
+```
+docs/linux_device_drivers_3rd_book/chapters/
+```
+
+Đây là sách *Linux Device Drivers, 3rd Edition* (Corbet, Rubini, Kroah-Hartman) đã split thành 18 chapter.
+- File index: `docs/linux_device_drivers_3rd_book/chapters/INDEX.md`
+- Đọc INDEX.md để xác định chapter phù hợp, sau đó đọc chapter đó để trả lời.
+- Chỉ dùng kiến thức bên ngoài khi sách không cover chủ đề được hỏi.
+
+### Essential Linux Device Drivers
+
+Khi người dùng hỏi về **device driver cho các bus/thiết bị cụ thể** (serial/UART, input subsystem, I2C, SPI, PCMCIA, PCI, USB, video/framebuffer, MTD/flash, embedded Linux, user-space drivers, driver debugging), **ưu tiên tra cứu** trong:
+
+```
+docs/essential_linux_device_drivers_book/chapters/
+```
+
+Đây là sách *Essential Linux Device Drivers* (Sreekrishnan Venkateswaran) đã split thành 19 chapter (ch01-12, ch17-23).
+- File index: `docs/essential_linux_device_drivers_book/chapters/INDEX.md`
 - Đọc INDEX.md để xác định chapter phù hợp, sau đó đọc chapter đó để trả lời.
 - Chỉ dùng kiến thức bên ngoài khi sách không cover chủ đề được hỏi.
 
