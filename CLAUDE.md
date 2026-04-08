@@ -16,7 +16,9 @@ Giảng viên: Lưu An Phú | FPT Software - Corporate Training Center.
 │   └── beaglebone_black_docs/
 │       └── hw-docs/                # Tài liệu phần cứng BBB (xem index.md bên trong)
 ├── examples/
-│   └── lessons/<NN>_<topic>/       # Example code & bài thực hành
+│   ├── lessons/<NN>_<topic>/       # Example code & bài thực hành
+│   └── projects/                   # Sample projects hoàn chỉnh (source + docs)
+│       └── mini_edr/               # Mini EDR agent (kprobe + netlink)
 └── CLAUDE.md
 ```
 
