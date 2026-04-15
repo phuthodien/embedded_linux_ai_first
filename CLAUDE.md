@@ -76,6 +76,25 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./<program>
 - Source code: `/home/phula/work/bbb/kernelbuildscripts`
 - Build script: `/home/phula/work/bbb/kernelbuildscripts/tools/rebuild.sh`
 
+## U-Boot Source
+
+- Source code: `/home/phula/work/bbb/u-boot`
+- Build script: `/home/phula/work/bbb/u-boot/build-am335x.sh`
+- Defconfig cho BBB: `am335x_evm_defconfig`
+- Output: `MLO` (SPL) và `u-boot.img`
+
+Toolchain để build U-Boot:
+- Path: `/home/phula/work/bbb/gcc-11.3.0-nolibc/arm-linux-gnueabi/bin/`
+- Prefix: `arm-linux-gnueabi-`
+
+```bash
+cd /home/phula/work/bbb/u-boot
+export CROSS_COMPILE=/home/phula/work/bbb/gcc-11.3.0-nolibc/arm-linux-gnueabi/bin/arm-linux-gnueabi-
+make ARCH=arm am335x_evm_defconfig
+make ARCH=arm -j$(nproc)
+# Output: MLO (104KB) và u-boot.img (968KB)
+```
+
 ## Tài liệu tham khảo
 
 > **Quy tắc ưu tiên**: Khi cần thông tin về BeagleBone Black, SoC AM335x, hoặc Linux programming,
